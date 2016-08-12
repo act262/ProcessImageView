@@ -21,14 +21,18 @@ public class ProcessImageView extends ImageView {
     private Paint mMaskPaint;
     // 文字画笔
     private Paint mTextPaint;
+    // 文字背景画笔
+    private Paint mTextBgPaint;
 
     // 当前进度
     private int progress = 0;
     // 是否需要展示进度
     private boolean isNeedProgress = false;
 
-    // 未完成颜色
+    // 未完成部分遮罩颜色
     private int unFinishedColor = Color.parseColor("#70000000");
+    // 文字背景颜色
+    private int mBgColor = Color.parseColor("#70000000");
 
     // 文字区域
     private final Rect mTextRect = new Rect();
@@ -56,10 +60,12 @@ public class ProcessImageView extends ImageView {
         mTextPaint.setTextSize(30);
         mTextPaint.setAntiAlias(true);
         mTextPaint.getTextBounds("100%", 0, 4, mTextRect);// 确定文字的宽度
-        System.out.println(mTextRect);
-
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setStrokeWidth(2);
+
+        mTextBgPaint = new Paint();
+        mTextBgPaint.setColor(mBgColor);
+        mTextBgPaint.setStyle(Paint.Style.FILL);
     }
 
     @Override
@@ -77,11 +83,24 @@ public class ProcessImageView extends ImageView {
             if (progress == 0) return;
 
             int left = (getWidth() - mTextRect.width()) >> 1;  // getHeight() / 2 - mTextRect.height() / 2
-            int top = (getHeight() + mTextRect.height()) >> 1; // getHeight() / 2 + mTextRect.height() / 2
+            int top = (getHeight() - mTextRect.height()) >> 1; // getHeight() / 2 + mTextRect.height() / 2
+
+            // 画文字的背景居中
+            canvas.drawRect(left, top, left + mTextRect.width(), top + mTextRect.height(), mTextBgPaint);
 
             // 中间显示进度百分比
-            canvas.drawText(progress + "%", left, top, mTextPaint);
+            canvas.drawText(centerText(), left, top + mTextRect.height(), mTextPaint);
         }
+    }
+
+    private String centerText() {
+        // 0～9补上2个空格，10~99补上1个空格
+        if (progress < 10)
+            return "  " + progress + "%";
+        else if (progress < 100)
+            return " " + progress + "%";
+        else
+            return progress + "%";
     }
 
     /**
