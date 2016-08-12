@@ -48,13 +48,16 @@ public class ProcessImageView extends ImageView {
 
     private void init() {
         mMaskPaint = new Paint();
+        mMaskPaint.setColor(unFinishedColor);
         mMaskPaint.setAntiAlias(true); // 消除锯齿
-        mMaskPaint.setStyle(Paint.Style.FILL);
+        mMaskPaint.setStyle(Paint.Style.FILL); //填充
 
         mTextPaint = new Paint();
         mTextPaint.setTextSize(30);
         mTextPaint.setAntiAlias(true);
         mTextPaint.getTextBounds("100%", 0, 4, mTextRect);// 确定文字的宽度
+        System.out.println(mTextRect);
+
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setStrokeWidth(2);
     }
@@ -64,12 +67,14 @@ public class ProcessImageView extends ImageView {
         super.onDraw(canvas);
         // 需要展示进度
         if (isNeedProgress) {
-            // 已完成部分
+            // 已完成部分的高度
             float height = getHeight() * progress / 100;
 
-            // 未完成部分 半透明显示
-            mMaskPaint.setColor(unFinishedColor);
+            // 绘制未完成部分遮罩
             canvas.drawRect(0, height, getWidth(), getHeight(), mMaskPaint);
+
+            // 0进度不显示百分比
+            if (progress == 0) return;
 
             int left = (getWidth() - mTextRect.width()) >> 1;  // getHeight() / 2 - mTextRect.height() / 2
             int top = (getHeight() + mTextRect.height()) >> 1; // getHeight() / 2 + mTextRect.height() / 2
