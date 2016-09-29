@@ -12,7 +12,7 @@ import com.micro.library.ProcessImageView;
 /**
  * ProcessImageView Demo
  *
- * @author zhangchaoxian@kankan.com
+ * @author act262@gmail.com
  */
 public class MainActivity extends AppCompatActivity {
 

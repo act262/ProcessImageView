@@ -13,7 +13,7 @@ import android.widget.ImageView;
  * <br/>
  * 下载进度
  *
- * @author zhangchaoxian@kankan.com
+ * @author act262@gmail.com
  */
 public class ProcessImageView extends ImageView {
 
